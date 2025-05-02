@@ -1,5 +1,8 @@
 {
+  "blink.cmp": { "branch": "main", "commit": "cb5e346d9e0efa7a3eee7fd4da0b690c48d2a98e" },
+  "friendly-snippets": { "branch": "main", "commit": "572f5660cf05f8cd8834e096d7b4c921ba18e175" },
   "fzf": { "branch": "master", "commit": "9c1a47acf7453f9dad5905b7f23ad06e5195d51f" },
+  "fzf-lua": { "branch": "main", "commit": "b11467c3fbfe48e4a815e4909f5c4e5b413ce6d0" },
   "fzf.vim": { "branch": "master", "commit": "3cb44a8ba588e1ada409af495bdc6a4d2d37d5da" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "1a31f824b9cd5bc6f342fc29e9a53b60d74af245" },
