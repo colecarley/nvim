@@ -72,6 +72,7 @@ lazy.setup({
 });
 
 require("mason").setup({});
+
 require("mason-lspconfig").setup{ ensure_installed = { "lua_ls", "clangd" , "pyright"}};
 require("lspconfig").lua_ls.setup({});
 require("lspconfig").clangd.setup({});
@@ -105,7 +106,6 @@ cmp.setup({
     })
 });
 
-
 vim.keymap.set('n', '<Leader>l', '<cmd>Lexplore<cr>');
 vim.keymap.set('n', '<Leader>s', '<cmd>vertical rightbelow split<cr>');
 vim.keymap.set('n', '<leader>q', '<cmd>wq!<cr>');
@@ -125,4 +125,3 @@ vim.keymap.set({'t', 'i'}, '<C-h>', '<C-Bslash><C-N><C-w>h');
 vim.keymap.set({'t', 'i'}, '<C-j>', '<C-Bslash><C-N><C-w>j');
 vim.keymap.set({'t', 'i'}, '<C-k>', '<C-Bslash><C-N><C-w>k');
 vim.keymap.set({'t', 'i'}, '<C-l>', '<C-Bslash><C-N><C-w>l');
-
