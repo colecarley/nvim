@@ -1,7 +1,6 @@
 vim.cmd.highlight({ "Error", "guibg=red" });
 vim.cmd.highlight({ "link", "Warning", "Error" });
 
-
 vim.opt.number = true;
 vim.opt.relativenumber = true;
 vim.opt.mouse = 'a';
@@ -21,7 +20,7 @@ vim.keymap.set({'n', 'x'}, 'gy', '"+y');
 
 local lazy = {};
 
-function lazy.install(path) 
+function lazy.install(path)
 	if not vim.loop.fs_stat(path) then
 			print("Installing lazy.nvim...")
 			vim.fn.system({
@@ -59,25 +58,71 @@ lazy.setup({
 		"typescript", "css", "javascript", "svelte", "cpp", "c"
 	}},
 	{ 'junegunn/fzf.vim', dependencies = { 'junegunn/fzf' } },
+	{ "ibhagwan/fzf-lua", dependencies = { "nvim-tree/nvim-web-devicons" }, },
 	{'williamboman/mason.nvim'},
-	{'williamboman/mason-lspconfig.nvim'},
-	{'neovim/nvim-lspconfig'},
+	{'williamboman/mason-lspconfig.nvim', dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig"}},
+	{'neovim/nvim-lspconfig', dependencies = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim"}},
 	{'tomasiser/vim-code-dark'},
+ 	{'neovim/nvim-lspconfig'},
+ 	{'hrsh7th/cmp-nvim-lsp'},
+ 	{'hrsh7th/cmp-buffer'},
+ 	{'hrsh7th/cmp-path'},
+ 	{'hrsh7th/cmp-cmdline'},
+ 	{'hrsh7th/nvim-cmp'},
 });
 
-require("mason").setup();
+require("mason").setup({});
 require("mason-lspconfig").setup{ ensure_installed = { "lua_ls", "clangd" , "pyright"}};
-require("lspconfig").lua_ls.setup {};
-require("lspconfig").clangd.setup {};
-require("lspconfig").pyright.setup {};
+require("lspconfig").lua_ls.setup({});
+require("lspconfig").clangd.setup({});
+require("lspconfig").pyright.setup({});
 
-vim.keymap.set('n', '<C-b>', '<cmd>Lexplore<cr>');
-vim.keymap.set('n', '<C-Bslash>', '<cmd>vertical rightbelow split<cr>');
+local cmp = require("cmp")
+cmp.setup({
+ snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        end,
+    },
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+    	{ name = 'luasnip' }, -- For luasnip users.
+    }, {
+      { name = 'buffer' },
+    })
+});
+
+
+vim.keymap.set('n', '<Leader>l', '<cmd>Lexplore<cr>');
+vim.keymap.set('n', '<Leader>s', '<cmd>vertical rightbelow split<cr>');
 vim.keymap.set('n', '<leader>q', '<cmd>wq!<cr>');
-vim.keymap.set('n', '<C-j>', '<cmd>terminal<cr>');
-vim.keymap.set('n', '<C-p>', '<cmd>Files<cr>');
-
+vim.keymap.set('n', '<Leader>t', '<cmd>terminal<cr>');
+vim.keymap.set('n', '<Leader>f', '<cmd>Files<cr>');
+vim.keymap.set('n', '<Leader>F', '<cmd>Rg<cr>');
 
 vim.cmd.colorscheme("codedark");
 
+
+vim.keymap.set('n', '<C-h>', '<C-w>h');
+vim.keymap.set('n', '<C-j>', '<C-w>j');
+vim.keymap.set('n', '<C-k>', '<C-w>k');
+vim.keymap.set('n', '<C-l>', '<C-w>l');
+
+vim.keymap.set({'t', 'i'}, '<C-h>', '<C-Bslash><C-N><C-w>h');
+vim.keymap.set({'t', 'i'}, '<C-j>', '<C-Bslash><C-N><C-w>j');
+vim.keymap.set({'t', 'i'}, '<C-k>', '<C-Bslash><C-N><C-w>k');
+vim.keymap.set({'t', 'i'}, '<C-l>', '<C-Bslash><C-N><C-w>l');
 
