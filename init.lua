@@ -9,6 +9,8 @@ vim.cmd.highlight({ "link", "Warning", "Error" })
 vim.opt.spell = true
 vim.opt.spelllang = "en_us"
 
+vim.opt.hidden = true;
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
@@ -59,9 +61,10 @@ lazy.path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 lazy.opts = {}
 
 lazy.setup({
+	{ "nvim-tree/nvim-web-devicons", opts = {} },
 	{ "folke/tokyonight.nvim" },
 	{ "tpope/vim-surround" },
-	{ "windwp/nvim-autopairs", event = "InsertEnter", config = true },
+	{ "windwp/nvim-autopairs",       opts = { event = "InsertEnter", config = true } },
 	{
 		"nvim-treesitter/nvim-treesitter",
 		highlight = { enable = true },
@@ -89,7 +92,7 @@ lazy.setup({
 	{ "hrsh7th/nvim-cmp" },
 	{ "stevearc/conform.nvim" },
 	{ "nvim-tree/nvim-tree.lua" },
-	{ "okuuva/auto-save.nvim" },
+	{ "okuuva/auto-save.nvim",  opts = {} },
 	{
 		"toppair/peek.nvim",
 		event = { "VeryLazy" },
@@ -120,8 +123,19 @@ lazy.setup({
 			mappings = { basic = true },
 		},
 	},
+	{
+		"lervag/vimtex",
+		lazy = false, -- we don't want to lazy load VimTeX
+		-- tag = "v2.15", -- uncomment to pin to a specific release
+		init = function()
+			-- VimTeX configuration goes here, e.g.
+			vim.g.vimtex_view_method = "zathura"
+		end
+	},
+	{ 'akinsho/toggleterm.nvim', version = "*", opts = { --[[ things you want to change go here]] } }
 })
 
+require("toggleterm").setup({});
 require("lualine").setup({
 	options = {
 		theme = "codedark",
@@ -156,7 +170,7 @@ cmp.setup({
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
 		expand = function(args)
-			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+			vim.fn["vsnip#anonymous"](args.body)  -- For `vsnip` users.
 			require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
 		end,
 	},
@@ -179,10 +193,13 @@ cmp.setup({
 	}),
 })
 
+require("peek").setup({ app = "browser" })
+
 vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
 vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
+vim.keymap.set("t", "<Leader>\\", "<cmd>TermNew<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>wq!<cr>")
-vim.keymap.set("n", "<Leader>t", "<cmd>vertical rightbelow split<cr><cmd>terminal<cr>")
+vim.keymap.set({ "n", "t" }, "<Leader>t", "<cmd>ToggleTerm<cr>")
 
 local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>p", builtin.find_files, { desc = "Telescope find files" })
@@ -206,3 +223,16 @@ vim.keymap.set("t", "<C-h>", "<C-Bslash><C-N><C-w>h")
 vim.keymap.set("t", "<C-j>", "<C-Bslash><C-N><C-w>j")
 vim.keymap.set("t", "<C-k>", "<C-Bslash><C-N><C-w>k")
 vim.keymap.set("t", "<C-l>", "<C-Bslash><C-N><C-w>l")
+
+local t = require("toggleterm.terminal");
+local Terminal = t.Terminal
+function _G.open_next_terminal()
+	Terminal:new({ close_on_exit = true, direction = "horizontal", }):toggle();
+end
+
+vim.api.nvim_set_keymap(
+	"t",
+	"<leader>\\",
+	"<cmd>lua open_next_terminal()<CR>",
+	{ noremap = true, silent = true }
+)
