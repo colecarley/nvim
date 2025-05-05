@@ -74,8 +74,6 @@ lazy.setup({
 			"c",
 		},
 	},
-	{ "junegunn/fzf.vim", dependencies = { "junegunn/fzf" } },
-	{ "ibhagwan/fzf-lua", dependencies = { "nvim-tree/nvim-web-devicons" } },
 	{ "williamboman/mason.nvim" },
 	{ "williamboman/mason-lspconfig.nvim", dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" } },
 	{
@@ -91,10 +89,7 @@ lazy.setup({
 	{ "hrsh7th/nvim-cmp" },
 	{ "stevearc/conform.nvim" },
 	{ "nvim-tree/nvim-tree.lua" },
-	{
-		"okuuva/auto-save.nvim",
-		opts = {},
-	},
+	{ "okuuva/auto-save.nvim" },
 	{
 		"toppair/peek.nvim",
 		event = { "VeryLazy" },
@@ -105,8 +100,35 @@ lazy.setup({
 			vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
 		end,
 	},
+	{
+		"nvim-lualine/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+	},
+	{
+		"nvim-telescope/telescope.nvim",
+		tag = "0.1.8",
+		-- or                              , branch = '0.1.x',
+		dependencies = { "nvim-lua/plenary.nvim" },
+	},
+	{
+		"numToStr/Comment.nvim",
+		opts = {
+			padding = true,
+			sticky = true,
+			toggler = { line = "gcc", block = "gbc" },
+			opleader = { line = "gc", block = "gb" },
+			mappings = { basic = true },
+		},
+	},
 })
 
+require("lualine").setup({
+	options = {
+		theme = "codedark",
+		section_separators = { left = "", right = "" },
+		component_separators = { left = "", right = "" },
+	},
+})
 require("nvim-tree").setup({})
 require("mason").setup({})
 require("mason-lspconfig").setup({ ensure_installed = { "lua_ls", "clangd", "pyright" } })
@@ -161,8 +183,12 @@ vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
 vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>wq!<cr>")
 vim.keymap.set("n", "<Leader>t", "<cmd>vertical rightbelow split<cr><cmd>terminal<cr>")
-vim.keymap.set("n", "<Leader>p", "<cmd>Files<cr>")
-vim.keymap.set("n", "<Leader>F", "<cmd>Rg<cr>")
+
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>p", builtin.find_files, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>F", builtin.live_grep, { desc = "Telescope live grep" })
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
 
 vim.cmd.colorscheme("codedark")
 
