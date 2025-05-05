@@ -9,7 +9,7 @@ vim.cmd.highlight({ "link", "Warning", "Error" })
 vim.opt.spell = true
 vim.opt.spelllang = "en_us"
 
-vim.opt.hidden = true;
+vim.opt.hidden = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -64,19 +64,22 @@ lazy.setup({
 	{ "nvim-tree/nvim-web-devicons", opts = {} },
 	{ "folke/tokyonight.nvim" },
 	{ "tpope/vim-surround" },
-	{ "windwp/nvim-autopairs",       opts = { event = "InsertEnter", config = true } },
+	{ "windwp/nvim-autopairs", opts = { event = "InsertEnter", config = true } },
 	{
 		"nvim-treesitter/nvim-treesitter",
-		highlight = { enable = true },
-		ensure_installed = {
-			"typescript",
-			"css",
-			"javascript",
-			"svelte",
-			"cpp",
-			"c",
-			"latex",
-			"markdown",
+		opts = {
+			highlight = { enable = true },
+			ensure_installed = {
+				"typescript",
+				"css",
+				"javascript",
+				"svelte",
+				"cpp",
+				"c",
+				"latex",
+				"markdown",
+				"markdown_inline",
+			},
 		},
 	},
 	{ "williamboman/mason.nvim" },
@@ -94,7 +97,7 @@ lazy.setup({
 	{ "hrsh7th/nvim-cmp" },
 	{ "stevearc/conform.nvim" },
 	{ "nvim-tree/nvim-tree.lua" },
-	{ "okuuva/auto-save.nvim",  opts = {} },
+	{ "okuuva/auto-save.nvim" },
 	{
 		"toppair/peek.nvim",
 		event = { "VeryLazy" },
@@ -109,12 +112,7 @@ lazy.setup({
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
-	{
-		"nvim-telescope/telescope.nvim",
-		tag = "0.1.8",
-		-- or                              , branch = '0.1.x',
-		dependencies = { "nvim-lua/plenary.nvim" },
-	},
+	{ "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
 	{
 		"numToStr/Comment.nvim",
 		opts = {
@@ -130,37 +128,23 @@ lazy.setup({
 		lazy = false,
 		init = function()
 			vim.g.vimtex_view_method = "zathura"
-		end
+		end,
 	},
-	{ 'akinsho/toggleterm.nvim',     version = "*", opts = {} },
-	{ 'tpope/vim-fugitive' },
-	{ 'rafamadriz/friendly-snippets' },
+	{ "akinsho/toggleterm.nvim", version = "*", opts = {} },
+	{ "tpope/vim-fugitive" },
+	{ "rafamadriz/friendly-snippets" },
 	{
 		"L3MON4D3/LuaSnip",
 		dependencies = { "rafamadriz/friendly-snippets" },
 		-- follow latest release.
 		opts = {
 			version = "v2.*",
-			build = "make install_jsregexp"
+			build = "make install_jsregexp",
 		},
 	},
-	{
-		"iurimateus/luasnip-latex-snippets.nvim",
-		requires = { "L3MON4D3/LuaSnip", "lervag/vimtex", "nvim-treesitter/nvim-treesitter" },
-		ft = { "markdown", "md", "plaintex", "tex", "latex," },
-		config = function()
-			require('luasnip-latex-snippets').setup({
-				use_treesitter = true,
-				allow_on_markdown = true,
-			})
-			require("luasnip").config.setup {
-				enable_autosnippets = true,
-			}
-		end,
-	}
 })
 
-require("toggleterm").setup({});
+require("toggleterm").setup({})
 require("lualine").setup({
 	options = {
 		theme = "codedark",
@@ -171,7 +155,15 @@ require("lualine").setup({
 require("nvim-tree").setup({})
 require("mason").setup({})
 require("mason-lspconfig").setup({ ensure_installed = { "lua_ls", "clangd", "pyright" } })
-require("lspconfig").lua_ls.setup({})
+require("lspconfig").lua_ls.setup({
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim" },
+			},
+		},
+	},
+})
 require("lspconfig").clangd.setup({})
 require("lspconfig").pyright.setup({})
 require("conform").setup({
@@ -217,9 +209,9 @@ cmp.setup({
 	}),
 })
 
-require("peek").setup({ app = "browser" });
-require("luasnip").config.setup { enable_autosnippets = true };
-require("luasnip.loaders.from_vscode").lazy_load();
+require("peek").setup({ app = "browser" })
+require("luasnip").config.setup({ enable_autosnippets = true })
+require("luasnip.loaders.from_vscode").lazy_load()
 
 vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
 vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
@@ -250,10 +242,10 @@ vim.keymap.set("t", "<C-j>", "<C-Bslash><C-N><C-w>j")
 vim.keymap.set("t", "<C-k>", "<C-Bslash><C-N><C-w>k")
 vim.keymap.set("t", "<C-l>", "<C-Bslash><C-N><C-w>l")
 
-local t = require("toggleterm.terminal");
+local t = require("toggleterm.terminal")
 local Terminal = t.Terminal
 function _G.open_next_terminal()
-	Terminal:new({ close_on_exit = true, direction = "horizontal", }):toggle();
+	Terminal:new({ close_on_exit = true, direction = "horizontal" }):toggle()
 end
 
-vim.api.nvim_set_keymap("t", "<leader>\\", "<cmd>lua open_next_terminal()<CR>", { noremap = true, silent = true });
+vim.api.nvim_set_keymap("t", "<leader>\\", "<cmd>lua open_next_terminal()<CR>", { noremap = true, silent = true })
