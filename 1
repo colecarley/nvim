@@ -75,8 +75,6 @@ lazy.setup({
 			"svelte",
 			"cpp",
 			"c",
-			"latex",
-			"markdown",
 		},
 	},
 	{ "williamboman/mason.nvim" },
@@ -127,37 +125,26 @@ lazy.setup({
 	},
 	{
 		"lervag/vimtex",
-		lazy = false,
+		lazy = false, -- we don't want to lazy load VimTeX
+		-- tag = "v2.15", -- uncomment to pin to a specific release
 		init = function()
+			-- VimTeX configuration goes here, e.g.
 			vim.g.vimtex_view_method = "zathura"
 		end
 	},
-	{ 'akinsho/toggleterm.nvim',     version = "*", opts = {} },
+	{ 'akinsho/toggleterm.nvim',                 version = "*", opts = {} },
 	{ 'tpope/vim-fugitive' },
 	{ 'rafamadriz/friendly-snippets' },
+	{ 'evesdropper/luasnip-latex-snippets.nvim', lazy = true,   ft = { 'tex', 'latex', 'md' } },
 	{
 		"L3MON4D3/LuaSnip",
-		dependencies = { "rafamadriz/friendly-snippets" },
+		dependencies = { "rafamadriz/friendly-snippets", "evesdropper/luasnip-latex-snippets.nvim" },
 		-- follow latest release.
 		opts = {
 			version = "v2.*",
 			build = "make install_jsregexp"
 		},
 	},
-	{
-		"iurimateus/luasnip-latex-snippets.nvim",
-		requires = { "L3MON4D3/LuaSnip", "lervag/vimtex", "nvim-treesitter/nvim-treesitter" },
-		ft = { "markdown", "md", "plaintex", "tex", "latex," },
-		config = function()
-			require('luasnip-latex-snippets').setup({
-				use_treesitter = true,
-				allow_on_markdown = true,
-			})
-			require("luasnip").config.setup {
-				enable_autosnippets = true,
-			}
-		end,
-	}
 })
 
 require("toggleterm").setup({});
@@ -218,7 +205,6 @@ cmp.setup({
 })
 
 require("peek").setup({ app = "browser" });
-require("luasnip").config.setup { enable_autosnippets = true };
 require("luasnip.loaders.from_vscode").lazy_load();
 
 vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
