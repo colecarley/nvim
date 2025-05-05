@@ -132,7 +132,8 @@ lazy.setup({
 			vim.g.vimtex_view_method = "zathura"
 		end
 	},
-	{ 'akinsho/toggleterm.nvim', version = "*", opts = { --[[ things you want to change go here]] } }
+	{ 'akinsho/toggleterm.nvim', version = "*", opts = {} },
+	{ 'tpope/vim-fugitive' },
 })
 
 require("toggleterm").setup({});
@@ -230,9 +231,4 @@ function _G.open_next_terminal()
 	Terminal:new({ close_on_exit = true, direction = "horizontal", }):toggle();
 end
 
-vim.api.nvim_set_keymap(
-	"t",
-	"<leader>\\",
-	"<cmd>lua open_next_terminal()<CR>",
-	{ noremap = true, silent = true }
-)
+vim.api.nvim_set_keymap("t", "<leader>\\", "<cmd>lua open_next_terminal()<CR>", { noremap = true, silent = true })
