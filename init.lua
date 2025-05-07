@@ -6,9 +6,6 @@ vim.opt.termguicolors = true
 vim.cmd.highlight({ "Error", "guibg=red" })
 vim.cmd.highlight({ "link", "Warning", "Error" })
 
-vim.opt.spell = true
-vim.opt.spelllang = "en_us"
-
 vim.opt.hidden = true
 
 vim.opt.number = true
@@ -66,6 +63,10 @@ lazy.setup({
 	{ "tpope/vim-surround" },
 	{ "windwp/nvim-autopairs", opts = { event = "InsertEnter", config = true } },
 	{
+		"iurimateus/luasnip-latex-snippets.nvim",
+		dependencies = { "L3MON4D3/LuaSnip" },
+	},
+	{
 		"nvim-treesitter/nvim-treesitter",
 		opts = {
 			highlight = { enable = true },
@@ -79,6 +80,8 @@ lazy.setup({
 				"latex",
 				"markdown",
 				"markdown_inline",
+				"jsonc",
+				"python",
 			},
 		},
 	},
@@ -152,7 +155,10 @@ lazy.setup({
 	{ "rafamadriz/friendly-snippets" },
 	{
 		"L3MON4D3/LuaSnip",
-		dependencies = { "rafamadriz/friendly-snippets" },
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+			"saadparwaiz1/cmp_luasnip",
+		},
 		-- follow latest release.
 		opts = {
 			version = "v2.*",
@@ -181,6 +187,62 @@ lazy.setup({
 			"rcarriga/nvim-notify",
 		},
 	},
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		---@type snacks.Config
+		opts = {
+			bigfile = { enabled = true },
+			image = { enabled = true },
+			dashboard = {
+				enabled = true,
+				sections = {
+					{ section = "header" },
+					{ section = "keys", gap = 1, padding = 1 },
+					{
+						pane = 2,
+						section = "terminal",
+						cmd = "square",
+						height = 5,
+						padding = 1,
+					},
+					{
+						pane = 2,
+						icon = " ",
+						title = "Recent Files",
+						section = "recent_files",
+						indent = 2,
+						padding = 1,
+					},
+					{ pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+					{
+						pane = 2,
+						icon = " ",
+						title = "Git Status",
+						section = "terminal",
+						enabled = function()
+							return Snacks.git.get_root() ~= nil
+						end,
+						cmd = "git status --short --branch --renames",
+						height = 5,
+						padding = 1,
+						ttl = 5 * 60,
+						indent = 3,
+					},
+					{ section = "startup" },
+				},
+			},
+			indent = { enabled = true },
+			input = { enabled = true },
+			picker = { enabled = true },
+			notifier = { enabled = true },
+			quickfile = { enabled = true },
+			scope = { enabled = true },
+			statuscolumn = { enabled = true },
+			words = { enabled = true },
+		},
+	},
 })
 
 require("toggleterm").setup({})
@@ -192,8 +254,16 @@ require("lualine").setup({
 	},
 })
 require("nvim-tree").setup({})
-require("mason").setup({})
-require("mason-lspconfig").setup({ ensure_installed = { "lua_ls", "clangd", "pyright" } })
+require("mason").setup({
+	ui = {
+		icons = {
+			package_installed = "✓",
+			package_pending = "➜",
+			package_uninstalled = "✗",
+		},
+	},
+})
+require("mason-lspconfig")
 require("lspconfig").lua_ls.setup({
 	settings = {
 		Lua = {
@@ -212,6 +282,7 @@ require("conform").setup({
 		rust = { "ast-grep" },
 		javascript = { "prettierd", "prettier", stop_after_first = true },
 		cpp = { "clang-format" },
+		json = { "clang-format", "prettier" },
 	},
 	format_on_save = {
 		-- These options will be passed to conform.format()
@@ -226,7 +297,7 @@ cmp.setup({
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
 		expand = function(args)
-			require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+			require("luasnip").lsp_expand(args.body)
 		end,
 	},
 	window = {
@@ -241,20 +312,23 @@ cmp.setup({
 		["<tab>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
 	sources = cmp.config.sources({
+		{ name = "luasnip" },
 		{ name = "nvim_lsp" },
-		{ name = "luasnip" }, -- For luasnip users.
 	}, {
 		{ name = "buffer" },
 	}),
 })
 
 require("peek").setup({ app = "browser" })
-require("luasnip").config.setup({ enable_autosnippets = true })
+require("luasnip").config.setup({
+	enable_autosnippets = true,
+})
 require("luasnip.loaders.from_vscode").lazy_load()
 
 vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
 vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
 vim.keymap.set("t", "<Leader>\\", "<cmd>TermNew<cr>")
+
 vim.keymap.set("n", "<leader>q", "<cmd>wq!<cr>")
 vim.keymap.set({ "n", "t" }, "<Leader>t", "<cmd>ToggleTerm<cr>")
 
@@ -349,3 +423,19 @@ require("noice").setup({
 vim.keymap.set("n", "<leader>ki", "<cmd>Lspsaga hover_doc<cr>")
 vim.keymap.set("n", "<leader>r", "<cmd>Lspsaga rename<cr>")
 vim.keymap.set("n", "<leader>]", "<cmd>vertical rightbelow split<cr><cmd>Lspsaga goto_definition<cr>")
+
+vim.api.nvim_create_autocmd("RecordingEnter", {
+	callback = function()
+		local reg = vim.fn.reg_recording()
+		vim.notify("Recording to " .. reg)
+	end,
+})
+
+vim.api.nvim_create_autocmd("RecordingLeave", {
+	callback = function()
+		local reg = vim.fn.reg_recording()
+		vim.notify("End recording to " .. reg)
+	end,
+})
+
+require("luasnip-latex-snippets").setup({ use_treesitter = true, allow_on_markdown = true })
