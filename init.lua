@@ -25,6 +25,15 @@ vim.keymap.set("n", "<leader>w", "<cmd>write<cr>")
 vim.keymap.set({ "n", "x" }, "gp", '"+p')
 vim.keymap.set({ "n", "x" }, "gy", '"+y')
 
+vim.keymap.set({ "n", "x" }, "gt", "<cmd>bnext<cr>")
+vim.keymap.set({ "n", "x" }, "gT", "<cmd>bprev<cr>")
+
+vim.diagnostic.config({
+	virtual_text = true,
+	virtual_lines = { current_line = true },
+	underline = true,
+	update_in_insert = false,
+})
 local lazy = {}
 
 function lazy.install(path)
@@ -59,13 +68,8 @@ lazy.opts = {}
 
 lazy.setup({
 	{ "nvim-tree/nvim-web-devicons", opts = {} },
-	{ "folke/tokyonight.nvim" },
 	{ "tpope/vim-surround" },
 	{ "windwp/nvim-autopairs", opts = { event = "InsertEnter", config = true } },
-	{
-		"iurimateus/luasnip-latex-snippets.nvim",
-		dependencies = { "L3MON4D3/LuaSnip" },
-	},
 	{
 		"nvim-treesitter/nvim-treesitter",
 		opts = {
@@ -82,6 +86,10 @@ lazy.setup({
 				"markdown_inline",
 				"jsonc",
 				"python",
+				"zig",
+				"rust",
+				"go",
+				"haskell",
 			},
 		},
 	},
@@ -126,21 +134,6 @@ lazy.setup({
 		},
 	},
 	{
-		"toppair/peek.nvim",
-		event = { "VeryLazy" },
-		build = "deno task --quiet build:fast",
-		config = function()
-			require("peek").setup()
-			vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
-			vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-		end,
-	},
-	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-	},
-	{ "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
-	{
 		"numToStr/Comment.nvim",
 		opts = {
 			padding = true,
@@ -151,8 +144,6 @@ lazy.setup({
 		},
 	},
 	{ "akinsho/toggleterm.nvim", version = "*", opts = {} },
-	{ "tpope/vim-fugitive" },
-	{ "rafamadriz/friendly-snippets" },
 	{
 		"L3MON4D3/LuaSnip",
 		dependencies = {
@@ -173,86 +164,32 @@ lazy.setup({
 		},
 	},
 	{
-		"folke/noice.nvim",
-		event = "VeryLazy",
-		opts = {
-			-- add any options here
-		},
-		dependencies = {
-			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-			"MunifTanjim/nui.nvim",
-			-- OPTIONAL:
-			--   `nvim-notify` is only needed, if you want to use the notification view.
-			--   If not available, we use `mini` as the fallback
-			"rcarriga/nvim-notify",
-		},
+		"ibhagwan/fzf-lua",
+		-- optional for icon support
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		-- or if using mini.icons/mini.nvim
+		-- dependencies = { "echasnovski/mini.icons" },
+		opts = {},
 	},
 	{
-		"folke/snacks.nvim",
-		priority = 1000,
-		lazy = false,
-		---@type snacks.Config
-		opts = {
-			bigfile = { enabled = true },
-			image = { enabled = true },
-			dashboard = {
-				enabled = true,
-				sections = {
-					{ section = "header" },
-					{ section = "keys", gap = 1, padding = 1 },
-					{
-						pane = 2,
-						section = "terminal",
-						cmd = "square",
-						height = 5,
-						padding = 1,
-					},
-					{
-						pane = 2,
-						icon = " ",
-						title = "Recent Files",
-						section = "recent_files",
-						indent = 2,
-						padding = 1,
-					},
-					{ pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
-					{
-						pane = 2,
-						icon = " ",
-						title = "Git Status",
-						section = "terminal",
-						enabled = function()
-							return Snacks.git.get_root() ~= nil
-						end,
-						cmd = "git status --short --branch --renames",
-						height = 5,
-						padding = 1,
-						ttl = 5 * 60,
-						indent = 3,
-					},
-					{ section = "startup" },
-				},
-			},
-			indent = { enabled = true },
-			input = { enabled = true },
-			picker = { enabled = true },
-			notifier = { enabled = true },
-			quickfile = { enabled = true },
-			scope = { enabled = true },
-			statuscolumn = { enabled = true },
-			words = { enabled = true },
+		"romgrk/barbar.nvim",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
 		},
+		init = function()
+			vim.g.barbar_auto_setup = false
+		end,
+		opts = {
+			-- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
+			-- animation = true,
+			-- insert_at_start = true,
+			-- …etc.
+		},
+		version = "^1.0.0", -- optional: only update when a new 1.x version is released
 	},
 })
 
 require("toggleterm").setup({})
-require("lualine").setup({
-	options = {
-		theme = "codedark",
-		section_separators = { left = "", right = "" },
-		component_separators = { left = "", right = "" },
-	},
-})
 require("nvim-tree").setup({})
 require("mason").setup({
 	ui = {
@@ -282,6 +219,7 @@ require("conform").setup({
 		rust = { "ast-grep" },
 		javascript = { "prettierd", "prettier", stop_after_first = true },
 		cpp = { "clang-format" },
+		c = { "clang-format" },
 		json = { "clang-format", "prettier" },
 	},
 	format_on_save = {
@@ -319,24 +257,21 @@ cmp.setup({
 	}),
 })
 
-require("peek").setup({ app = "browser" })
 require("luasnip").config.setup({
 	enable_autosnippets = true,
 })
-require("luasnip.loaders.from_vscode").lazy_load()
 
 vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
 vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
 vim.keymap.set("t", "<Leader>\\", "<cmd>TermNew<cr>")
 
-vim.keymap.set("n", "<leader>q", "<cmd>wq!<cr>")
-vim.keymap.set({ "n", "t" }, "<Leader>t", "<cmd>ToggleTerm<cr>")
+vim.keymap.set("n", "<leader>q", "<cmd>bdelete<cr>")
+vim.keymap.set("n", "<leader>Q", "<cmd>qall<cr>")
+vim.keymap.set("n", "<Leader>t", "<cmd>ToggleTerm<cr>")
 
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>p", builtin.find_files, { desc = "Telescope find files" })
-vim.keymap.set("n", "<leader>F", builtin.live_grep, { desc = "Telescope live grep" })
-vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
+vim.keymap.set("n", "<leader>p", "<cmd>FzfLua files<cr>")
+vim.keymap.set("n", "<leader>F", "<cmd>FzfLua live_grep<cr>")
+vim.keymap.set("n", "<leader>c", "<cmd>FzfLua buffers<cr>")
 
 vim.cmd.colorscheme("codedark")
 
@@ -377,18 +312,8 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 require("lspsaga").setup({
-	lightbulb = {
-		enable = false,
-	},
-	symbol_in_winbar = {
-		enable = true,
-		separator = " › ",
-		hide_keyword = false,
-		show_file = true,
-		folder_level = 1,
-		color_mode = true,
-		delay = 300,
-	},
+	lightbulb = { enable = false },
+	symbol_in_winbar = { enable = false },
 	border = "single",
 	devicon = true,
 	title = true,
@@ -401,27 +326,7 @@ require("lspsaga").setup({
 	imp_sign = "󰳛 ",
 })
 
-require("noice").setup({
-	lsp = {
-		-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-		override = {
-			["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-			["vim.lsp.util.stylize_markdown"] = true,
-			["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-		},
-	},
-	-- you can enable a preset for easier configuration
-	presets = {
-		bottom_search = true, -- use a classic bottom cmdline for search
-		command_palette = true, -- position the cmdline and popupmenu together
-		long_message_to_split = true, -- long messages will be sent to a split
-		inc_rename = false, -- enables an input dialog for inc-rename.nvim
-		lsp_doc_border = false, -- add a border to hover docs and signature help
-	},
-})
-
 vim.keymap.set("n", "<leader>ki", "<cmd>Lspsaga hover_doc<cr>")
-vim.keymap.set("n", "<leader>r", "<cmd>Lspsaga rename<cr>")
 vim.keymap.set("n", "<leader>]", "<cmd>vertical rightbelow split<cr><cmd>Lspsaga goto_definition<cr>")
 
 vim.api.nvim_create_autocmd("RecordingEnter", {
@@ -437,5 +342,3 @@ vim.api.nvim_create_autocmd("RecordingLeave", {
 		vim.notify("End recording to " .. reg)
 	end,
 })
-
-require("luasnip-latex-snippets").setup({ use_treesitter = true, allow_on_markdown = true })
