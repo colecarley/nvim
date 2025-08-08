@@ -170,7 +170,7 @@ lazy.setup({
 		-- or if using mini.icons/mini.nvim
 		-- dependencies = { "echasnovski/mini.icons" },
 		opts = {},
-	},
+	}
 })
 
 require("toggleterm").setup({})
@@ -249,7 +249,7 @@ vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
 vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
 vim.keymap.set("t", "<Leader>\\", "<cmd>TermNew<cr>")
 
-vim.keymap.set("n", "<leader>q", "<cmd>bdelete<cr>")
+vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
 vim.keymap.set("n", "<leader>Q", "<cmd>qall<cr>")
 vim.keymap.set("n", "<Leader>t", "<cmd>ToggleTerm<cr>")
 
