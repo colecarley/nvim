@@ -13,12 +13,13 @@ vim.opt.relativenumber = true
 vim.opt.mouse = "a"
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.wrap = true
 vim.opt.breakindent = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = false
+
 
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>w", "<cmd>write<cr>")
@@ -171,8 +172,24 @@ lazy.setup({
 		-- dependencies = { "echasnovski/mini.icons" },
 		opts = {},
 	},
-	{ "lewis6991/gitsigns.nvim" }
+	{ "lewis6991/gitsigns.nvim" },
+	{
+  "jackplus-xyz/player-one.nvim",
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+		}
+	},
+	{
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' }
+	},
+	{'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'}
 })
+
+require('lualine').setup()
+require('bufferline').setup()
 
 local gitsigns = require("gitsigns")
 gitsigns.setup({
