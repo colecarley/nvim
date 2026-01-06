@@ -1,9 +1,0 @@
-{
-  "inline math": {
-    "prefix": "mk",
-    "body": ["$$0$"],
-    "luasnip": {
-      "autotrigger": true
-    }
-  }
-}

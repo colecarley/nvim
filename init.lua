@@ -1,43 +1,7 @@
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+require("core.options")
+require("core.keymaps")
 
-vim.opt.termguicolors = true
-
-vim.cmd.highlight({ "Error", "guibg=red" })
-vim.cmd.highlight({ "link", "Warning", "Error" })
-
-vim.opt.hidden = true
-
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.mouse = "a"
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.hlsearch = true
-vim.opt.wrap = true
-vim.opt.breakindent = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = false
-
-
-vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>w", "<cmd>write<cr>")
-vim.keymap.set({ "n", "x" }, "gp", '"+p')
-vim.keymap.set({ "n", "x" }, "gy", '"+y')
-vim.keymap.set({ "n", "x" }, "gyy", '"+yy')
-
-vim.keymap.set({ "n", "x" }, "gt", "<cmd>bnext<cr>")
-vim.keymap.set({ "n", "x" }, "gT", "<cmd>bprev<cr>")
-
-vim.diagnostic.config({
-	virtual_text = true,
-	virtual_lines = { current_line = true },
-	underline = true,
-	update_in_insert = false,
-})
 local lazy = {}
-
 function lazy.install(path)
 	if not vim.loop.fs_stat(path) then
 		print("Installing lazy.nvim...")
@@ -69,123 +33,9 @@ lazy.path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 lazy.opts = {}
 
 lazy.setup({
-	{ "nvim-tree/nvim-web-devicons", opts = {} },
-	{ "tpope/vim-surround" },
-	{ "windwp/nvim-autopairs",       opts = { event = "InsertEnter", config = true } },
-	{
-		"nvim-treesitter/nvim-treesitter",
-		opts = {
-			highlight = { enable = true },
-			ensure_installed = {
-				"typescript",
-				"css",
-				"javascript",
-				"svelte",
-				"cpp",
-				"c",
-				"latex",
-				"markdown",
-				"markdown_inline",
-				"jsonc",
-				"python",
-				"zig",
-				"rust",
-				"go",
-				"haskell",
-			},
-		},
-	},
-	{ "williamboman/mason.nvim" },
-	{ "williamboman/mason-lspconfig.nvim", dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" } },
-	{
-		"neovim/nvim-lspconfig",
-		dependencies = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim" },
-	},
-	{ "tomasiser/vim-code-dark" },
-	{ "neovim/nvim-lspconfig" },
-	{ "hrsh7th/cmp-nvim-lsp" },
-	{ "hrsh7th/cmp-buffer" },
-	{ "hrsh7th/cmp-path" },
-	{ "hrsh7th/cmp-cmdline" },
-	{ "hrsh7th/nvim-cmp" },
-	-- { "stevearc/conform.nvim" },
-	{ "nvim-tree/nvim-tree.lua" },
-	{
-		"okuuva/auto-save.nvim",
-		version = "^1.0.0",                                                    -- see https://devhints.io/semver, alternatively use '*' to use the latest tagged release
-		cmd = "ASToggle",                                                      -- optional for lazy loading on command
-		event = { "InsertLeave", "TextChanged" },                              -- optional for lazy loading on trigger events
-		opts = {
-			enabled = true,                                                      -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
-			trigger_events = {                                                   -- See :h events
-				immediate_save = { "BufLeave", "FocusLost", "QuitPre", "VimSuspend" }, -- vim events that trigger an immediate save
-				defer_save = { "InsertLeave", "TextChanged" },                     -- vim events that trigger a deferred save (saves after `debounce_delay`)
-				cancel_deferred_save = { "InsertEnter" },                          -- vim events that cancel a pending deferred save
-			},
-			-- function that takes the buffer handle and determines whether to save the current buffer or not
-			-- return true: if buffer is ok to be saved
-			-- return false: if it's not ok to be saved
-			-- if set to `nil` then no specific condition is applied
-			condition = nil,
-			write_all_buffers = false, -- write all buffers when the current one meets `condition`
-			noautocmd = false,      -- do not execute autocmds when saving
-			lockmarks = false,      -- lock marks when saving, see `:h lockmarks` for more details
-			debounce_delay = 1000,  -- delay after which a pending save is executed
-			-- log debug messages to 'auto-save.log' file in neovim cache directory, set to `true` to enable
-			debug = false,
-		},
-	},
-	{
-		"numToStr/Comment.nvim",
-		opts = {
-			padding = true,
-			sticky = true,
-			toggler = { line = "gcc", block = "gbc" },
-			opleader = { line = "gc", block = "gb" },
-			mappings = { basic = true },
-		},
-	},
-	{
-		"L3MON4D3/LuaSnip",
-		dependencies = {
-			"rafamadriz/friendly-snippets",
-			"saadparwaiz1/cmp_luasnip",
-		},
-		-- follow latest release.
-		opts = {
-			version = "v2.*",
-			build = "make install_jsregexp",
-		},
-	},
-	{
-		"nvimdev/lspsaga.nvim",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter", -- optional
-			"nvim-tree/nvim-web-devicons",  -- optional
-		},
-	},
-	{
-		"ibhagwan/fzf-lua",
-		-- optional for icon support
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		-- or if using mini.icons/mini.nvim
-		-- dependencies = { "echasnovski/mini.icons" },
-		opts = {},
-	},
-	{ "lewis6991/gitsigns.nvim" },
-	{
-  "jackplus-xyz/player-one.nvim",
-		opts = {
-			-- your configuration comes here
-			-- or leave it empty to use the default settings
-			-- refer to the configuration section below
-		}
-	},
-	{
-    'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' }
-	},
-	{'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'}
+    spec = {
+        import = "plugins"
+    }
 })
 
 require('lualine').setup()
@@ -220,7 +70,7 @@ vim.lsp.enable("lua_ls", {
 	on_attach = function(client, bufnr)
 		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 	end
-});
+})
 vim.lsp.config("clangd", {
 	settings = {
 		clangd = {
@@ -242,23 +92,17 @@ vim.lsp.config("clangd", {
 vim.lsp.enable("clangd")
 vim.lsp.enable("pyright")
 
--- require("conform").setup({
--- 	formatters_by_ft = {
--- 		lua = { "stylua" },
--- 		python = { "black" },
--- 		rust = { "ast-grep" },
--- 		javascript = { "prettierd", "prettier", stop_after_first = true },
--- 		cpp = { "clang-format" },
--- 		c = { "clang-format" },
--- 		json = { "clang-format", "prettier" },
--- 	},
--- 	format_on_save = {
--- 		-- These options will be passed to conform.format()
--- 		timeout_ms = 500,
--- 		async = false,
--- 		lsp_format = "fallback",
--- 	},
--- })
+require("conform").setup({
+	formatters_by_ft = {
+		lua = { "stylua" },
+		python = { "black" },
+		rust = { "ast-grep" },
+		javascript = { "prettierd", "prettier", stop_after_first = true },
+		cpp = { "clang-format" },
+		c = { "clang-format" },
+		json = { "clang-format", "prettier" },
+	}
+})
 
 local cmp = require("cmp")
 cmp.setup({
@@ -287,43 +131,6 @@ cmp.setup({
 	}),
 })
 
-require("luasnip").config.setup({
-	enable_autosnippets = true,
-})
-
-vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
-vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
-vim.keymap.set("t", "<Leader>\\", "<cmd>TermNew<cr>")
-
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
-vim.keymap.set("n", "<leader>Q", "<cmd>qall<cr>")
-
-vim.keymap.set("n", "<leader>p", "<cmd>FzfLua files<cr>")
-vim.keymap.set("n", "<leader>F", "<cmd>FzfLua live_grep<cr>")
-vim.keymap.set("n", "<leader>c", "<cmd>FzfLua buffers<cr>")
-
-vim.cmd.colorscheme("codedark")
-
-vim.keymap.set("n", "<C-h>", "<C-w>h")
-vim.keymap.set("n", "<C-l>", "<C-w>l")
-vim.keymap.set("i", "<C-h>", "<C-Bslash><C-N><C-w>h")
-vim.keymap.set("i", "<C-l>", "<C-Bslash><C-N><C-w>l")
-vim.keymap.set("t", "<C-h>", "<C-Bslash><C-N><C-w>h")
-vim.keymap.set("t", "<C-l>", "<C-Bslash><C-N><C-w>l")
-
-local group = vim.api.nvim_create_augroup("autosave", {})
-
-vim.api.nvim_create_autocmd("User", {
-	pattern = "AutoSaveWritePost",
-	group = group,
-	callback = function(opts)
-		if opts.data.saved_buffer ~= nil then
-			local filename = vim.api.nvim_buf_get_name(opts.data.saved_buffer)
-			vim.notify("AutoSave: saved " .. filename .. " at " .. vim.fn.strftime("%H:%M:%S"), vim.log.levels.INFO)
-		end
-	end,
-})
-
 require("lspsaga").setup({
 	definition = {
 		keys = {
@@ -345,47 +152,5 @@ require("lspsaga").setup({
 	imp_sign = "󰳛 ",
 })
 
-
-vim.api.nvim_create_autocmd("RecordingEnter", {
-	callback = function()
-		local reg = vim.fn.reg_recording()
-		vim.notify("Recording to " .. reg)
-	end,
-})
-
-vim.api.nvim_create_autocmd("RecordingLeave", {
-	callback = function()
-		local reg = vim.fn.reg_recording()
-		vim.notify("End recording to " .. reg)
-	end,
-})
-
-
-vim.keymap.set("n", "<leader>ki", "<cmd>Lspsaga peek_definition<cr>")
-
-local function outgoing_calls()
-	vim.cmd('Lspsaga outgoing_calls');
-end
-
-local function incoming_calls()
-	vim.cmd('Lspsaga incoming_calls');
-end
-
-local function references()
-	vim.cmd('Lspsaga finder');
-end
-
-local function rename()
-	vim.cmd('Lspsaga rename');
-end
-
-local function git_status()
-	vim.cmd('FzfLua git_status');
-end
-
-vim.api.nvim_create_user_command("Outcalls", outgoing_calls, {})
-vim.api.nvim_create_user_command("Incalls", incoming_calls, {})
-vim.api.nvim_create_user_command("Refs", references, {})
-vim.api.nvim_create_user_command("Rename", rename, {})
-vim.api.nvim_create_user_command("Status", git_status, {})
-vim.api.nvim_create_user_command("Status", git_status, {})
+-- vim.cmd.colorscheme("codedark")
+vim.cmd.colorscheme("gruvbox-material")
