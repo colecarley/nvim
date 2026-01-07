@@ -70,14 +70,21 @@ vim.api.nvim_create_user_command("Rename", rename, {})
 vim.api.nvim_create_user_command("Status", git_status, {})
 
 vim.api.nvim_create_user_command("Format", function(args)
-	require("conform").format({
-		async = true,
-		timeout_ms = 500,
-		lsp_fallback = true,
-		range = {
-			["start"] = vim.api.nvim_buf_get_mark(0, "<"),
-			["end"] = vim.api.nvim_buf_get_mark(0, ">"),
-		},
-	})
+    require("conform").format({
+        async = true,
+        timeout_ms = 500,
+        lsp_fallback = true,
+        range = {
+            ["start"] = vim.api.nvim_buf_get_mark(0, "<"),
+            ["end"] = vim.api.nvim_buf_get_mark(0, ">"),
+        },
+    })
 end, { range = true })
 
+vim.api.nvim_create_user_command("FormatBuffer", function(args)
+    require("conform").format({
+        async = true,
+        timeout_ms = 500,
+        lsp_fallback = true,
+    })
+end, { range = false })

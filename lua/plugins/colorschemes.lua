@@ -1,4 +1,4 @@
 return {
-	{ "tomasiser/vim-code-dark" },
+    { "tomasiser/vim-code-dark" },
     { "sainnhe/gruvbox-material" },
 }
