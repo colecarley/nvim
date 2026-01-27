@@ -29,3 +29,12 @@ vim.keymap.set({"i", "t"}, "<C-j>", "<C-Bslash><C-N><C-w>j")
 vim.keymap.set("n", "<leader>cd", "<cmd>FzfLua lsp_definitions<cr>")
 vim.keymap.set("n", "<leader>ci", "<cmd>FzfLua lsp_implementations<cr>")
 vim.keymap.set("n", "<leader>cr", "<cmd>FzfLua lsp_references<cr>")
+
+vim.keymap.set('n', '<leader>cpd', function()
+    local cwd = vim.fn.expand('%:p:h')
+    local oil_file = "oil://";
+        if cwd:find("^" .. oil_file) == 1 then
+            cwd = cwd:sub(string.len(oil_file) + 1, -1)
+        end
+    vim.cmd('cd ' .. cwd)
+end, { desc = 'Set working directory to path of buffer.' })
