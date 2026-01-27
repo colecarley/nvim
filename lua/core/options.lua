@@ -1,4 +1,5 @@
 vim.g.mapleader = " "
+vim.opt.clipboard = "unnamedplus"
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -44,19 +45,11 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 local function outgoing_calls()
-	vim.cmd('Lspsaga outgoing_calls')
+	vim.cmd('FzfLua lsp_outgoing_calls')
 end
 
 local function incoming_calls()
-	vim.cmd('Lspsaga incoming_calls')
-end
-
-local function references()
-	vim.cmd('Lspsaga finder')
-end
-
-local function rename()
-	vim.cmd('Lspsaga rename')
+	vim.cmd('FzfLua lsp_incoming_calls')
 end
 
 local function git_status()
@@ -65,8 +58,6 @@ end
 
 vim.api.nvim_create_user_command("Outcalls", outgoing_calls, {})
 vim.api.nvim_create_user_command("Incalls", incoming_calls, {})
-vim.api.nvim_create_user_command("Refs", references, {})
-vim.api.nvim_create_user_command("Rename", rename, {})
 vim.api.nvim_create_user_command("Status", git_status, {})
 
 vim.api.nvim_create_user_command("Format", function(args)

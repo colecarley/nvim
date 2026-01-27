@@ -1,17 +1,17 @@
 vim.keymap.set("n", "<leader>w", "<cmd>write<cr>")
-vim.keymap.set({ "n", "x" }, "gp", '"+p')
-vim.keymap.set({ "n", "x" }, "gy", '"+y')
-vim.keymap.set({ "n", "x" }, "gyy", '"+yy')
 
 vim.keymap.set({ "n", "x" }, "gt", "<cmd>bnext<cr>")
 vim.keymap.set({ "n", "x" }, "gT", "<cmd>bprev<cr>")
 
-vim.keymap.set("n", "<Leader>a", "<cmd>NvimTreeToggle<cr>")
-vim.keymap.set("n", "<Leader>\\", "<cmd>vertical rightbelow split<cr>")
-vim.keymap.set("t", "<Leader>\\", "<cmd>TermNew<cr>")
+vim.keymap.set("n", "<Leader>-", "<C-w>s")
+vim.keymap.set("n", "<Leader>\\", "<C-w>v")
+vim.keymap.set("n", "<Leader>wc", "<C-w><C-q>")
+vim.keymap.set({"n", "x"}, "<Leader>.", "<cmd>Oil<cr>")
 
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
-vim.keymap.set("n", "<leader>Q", "<cmd>qall<cr>")
+vim.keymap.set({"n", "x"}, "<Leader>bd", "<cmd>bd<cr>")
+
+vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>")
+vim.keymap.set("n", "<leader>Q", "<cmd>qall!<cr>")
 
 vim.keymap.set("n", "<leader>p", "<cmd>FzfLua files<cr>")
 vim.keymap.set("n", "<leader>F", "<cmd>FzfLua live_grep<cr>")
@@ -19,9 +19,13 @@ vim.keymap.set("n", "<leader>c", "<cmd>FzfLua buffers<cr>")
 
 vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("i", "<C-h>", "<C-Bslash><C-N><C-w>h")
 vim.keymap.set("i", "<C-l>", "<C-Bslash><C-N><C-w>l")
-vim.keymap.set("t", "<C-h>", "<C-Bslash><C-N><C-w>h")
-vim.keymap.set("t", "<C-l>", "<C-Bslash><C-N><C-w>l")
+vim.keymap.set("i", "<C-k>", "<C-Bslash><C-N><C-w>k")
+vim.keymap.set("i", "<C-j>", "<C-Bslash><C-N><C-w>j")
 
-vim.keymap.set("n", "<leader>ki", "<cmd>Lspsaga peek_definition<cr>")
+vim.keymap.set("n", "<leader>cd", "<cmd>FzfLua lsp_definitions<cr>")
+vim.keymap.set("n", "<leader>ci", "<cmd>FzfLua lsp_implementations<cr>")
+vim.keymap.set("n", "<leader>cr", "<cmd>FzfLua lsp_references<cr>")

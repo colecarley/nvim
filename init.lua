@@ -38,14 +38,19 @@ lazy.setup({
     }
 })
 
-require('lualine').setup()
+require('lualine').setup({
+    sections = {
+        lualine_c = { { 'filename', path = 1 } }
+    }
+})
+
 require('bufferline').setup()
 
 local gitsigns = require("gitsigns")
 gitsigns.setup({
     current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
 })
-require("nvim-tree").setup({})
+
 require("mason").setup({
     ui = {
         icons = {
@@ -152,5 +157,15 @@ require("lspsaga").setup({
     imp_sign = "󰳛 ",
 })
 
+require("oil").setup({
+    view_options = {
+        -- Show files and directories that start with "."
+        show_hidden = true,
+    }
+})
+
 -- vim.cmd.colorscheme("codedark")
-vim.cmd.colorscheme("gruvbox-material")
+-- vim.cmd.colorscheme("gruvbox-material")
+-- vim.cmd.colorscheme("vscode")
+vim.cmd.colorscheme("onedark")
+
