@@ -1,6 +1,11 @@
 vim.g.mapleader = " "
 vim.opt.clipboard = "unnamedplus"
 
+vim.opt.background = "dark"
+
+vim.g.gruvbox_material_background = "hard"
+vim.g.gruvbox_material_better_performance = 1
+
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 

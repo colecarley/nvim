@@ -136,36 +136,15 @@ cmp.setup({
     }),
 })
 
-require("lspsaga").setup({
-    definition = {
-        keys = {
-            edit = 'o',
-            vsplit = 's'
-        }
-    },
-    lightbulb = { enable = false },
-    symbol_in_winbar = { enable = false },
-    border = "single",
-    devicon = true,
-    title = true,
-    expand = "⊞",
-    collapse = "⊟",
-    code_action = "💡",
-    actionfix = " ",
-    lines = { "┗", "┣", "┃", "━", "┏" },
-    kind = {},
-    imp_sign = "󰳛 ",
-})
-
 require("oil").setup({
     view_options = {
-        -- Show files and directories that start with "."
         show_hidden = true,
     }
 })
 
 -- vim.cmd.colorscheme("codedark")
--- vim.cmd.colorscheme("gruvbox-material")
+vim.cmd.colorscheme("gruvbox-material")
 -- vim.cmd.colorscheme("vscode")
-vim.cmd.colorscheme("onedark")
+-- vim.cmd.colorscheme("onedark")
+-- vim.cmd.colorscheme("midnight")
 

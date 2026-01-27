@@ -1,6 +1,7 @@
 return {
     { "tomasiser/vim-code-dark" },
     {'Mofiqul/vscode.nvim'},
-    { "sainnhe/gruvbox-material" },
+    { "sainnhe/gruvbox-material"},
     {"navarasu/onedark.nvim"},
+    { 'dasupradyumna/midnight.nvim'},
 }
