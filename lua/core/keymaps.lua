@@ -8,7 +8,7 @@ vim.keymap.set("n", "<Leader>\\", "<C-w>v")
 vim.keymap.set("n", "<Leader>wc", "<C-w><C-q>")
 vim.keymap.set({"n", "x"}, "<Leader>.", "<cmd>Oil<cr>")
 
-vim.keymap.set({"n", "x"}, "<Leader>bd", "<cmd>bd<cr>")
+vim.keymap.set({"n", "x"}, "<Leader>bd", "<cmd>bp|bd #<cr>")
 
 vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>")
 vim.keymap.set("n", "<leader>Q", "<cmd>qall!<cr>")

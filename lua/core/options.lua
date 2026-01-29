@@ -61,9 +61,17 @@ local function git_status()
 	vim.cmd('FzfLua git_status')
 end
 
+local function get_current_path()
+    local path = vim.fn.expand("%");
+    vim.fn.setreg("+", path)
+    print("Copied: " .. path)
+end
+
 vim.api.nvim_create_user_command("Outcalls", outgoing_calls, {})
 vim.api.nvim_create_user_command("Incalls", incoming_calls, {})
 vim.api.nvim_create_user_command("Status", git_status, {})
+
+vim.api.nvim_create_user_command("Path", get_current_path, {})
 
 vim.api.nvim_create_user_command("Format", function(args)
     require("conform").format({
