@@ -49,27 +49,11 @@ vim.api.nvim_create_autocmd("User", {
 	end,
 })
 
-local function outgoing_calls()
-	vim.cmd('FzfLua lsp_outgoing_calls')
-end
-
-local function incoming_calls()
-	vim.cmd('FzfLua lsp_incoming_calls')
-end
-
-local function git_status()
-	vim.cmd('FzfLua git_status')
-end
-
 local function get_current_path()
     local path = vim.fn.expand("%");
     vim.fn.setreg("+", path)
     print("Copied: " .. path)
 end
-
-vim.api.nvim_create_user_command("Outcalls", outgoing_calls, {})
-vim.api.nvim_create_user_command("Incalls", incoming_calls, {})
-vim.api.nvim_create_user_command("Status", git_status, {})
 
 vim.api.nvim_create_user_command("Path", get_current_path, {})
 
