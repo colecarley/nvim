@@ -15,6 +15,7 @@ return {
             quickfile = { enabled = true },
             statuscolumn = { enabled = true },
             words = { enabled = true },
+            image = { enabled = true },
             styles = {
                 notification = {
                     -- wo = { wrap = true } -- Wrap notifications
@@ -22,8 +23,6 @@ return {
             }
         },
         keys = {
-            -- Top Pickers & Explorer
-            { "<leader>.",       function() Snacks.explorer() end,                                       desc = "File Explorer" },
             -- find
             { "<leader>fb",      function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
             { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },

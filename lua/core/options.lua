@@ -9,6 +9,8 @@ vim.g.gruvbox_material_better_performance = 1
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+vim.g.lazygit_config = false
+
 vim.opt.termguicolors = true
 
 vim.cmd.highlight({ "Error", "guibg=red" })
@@ -28,6 +30,7 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
+vim.opt.cursorline = true
 
 vim.diagnostic.config({
 	virtual_text = true,

@@ -19,3 +19,5 @@ vim.keymap.set({"i", "t"}, "<C-h>", "<C-Bslash><C-N><C-w>h")
 vim.keymap.set({"i", "t"}, "<C-l>", "<C-Bslash><C-N><C-w>l")
 vim.keymap.set({"i", "t"}, "<C-k>", "<C-Bslash><C-N><C-w>k")
 vim.keymap.set({"i", "t"}, "<C-j>", "<C-Bslash><C-N><C-w>j")
+
+vim.keymap.set("n", "<leader>.", "<cmd>Oil<cr>")

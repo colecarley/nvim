@@ -13,9 +13,9 @@ return {
 	},
 	{
 		"sainnhe/gruvbox-material",
-		config = function()
-			vim.cmd.colorscheme("gruvbox-material")
-		end,
+		-- config = function()
+		-- 	vim.cmd.colorscheme("gruvbox-material")
+		-- end,
 	},
 	{
 		"navarasu/onedark.nvim",
@@ -27,6 +27,19 @@ return {
 		"dasupradyumna/midnight.nvim",
 		-- config = function()
 		-- 	vim.cmd.colorscheme("midnight")
+		-- end,
+	},
+    {
+		"webhooked/kanso.nvim",
+		config = function()
+            require("kanso").setup({ theme = "zen" })
+			vim.cmd.colorscheme("kanso")
+		end,
+	},
+    {
+		"rebelot/kanagawa.nvim",
+		-- config = function()
+		-- 	vim.cmd.colorscheme("kanagawa-dragon")
 		-- end,
 	},
 }
