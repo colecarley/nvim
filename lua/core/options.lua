@@ -60,6 +60,43 @@ end
 
 vim.api.nvim_create_user_command("Path", get_current_path, {})
 
+local function remove_all_buffers()
+    local bufs = vim.api.nvim_list_bufs()
+    for _, bufnr in ipairs(bufs) do
+        -- Only delete valid and loaded buffers
+        if vim.api.nvim_buf_is_loaded(bufnr) then
+            vim.api.nvim_buf_delete(bufnr, { force = true })
+        end
+    end
+end
+
+vim.api.nvim_create_user_command("CleanUp", remove_all_buffers, {});
+
+vim.api.nvim_create_user_command("Term", function()
+    vim.cmd("term");
+end, {})
+
+vim.api.nvim_create_user_command("Here", function()
+    local file = vim.api.nvim_buf_get_name(0)
+    local line = vim.api.nvim_win_get_cursor(0)[1]
+    local fileAndLine = file .. ":" .. tostring(line)
+    vim.fn.setreg("+", fileAndLine)
+    print("Copied: " .. fileAndLine)
+end, {})
+
+local function googleSearch()
+    local start_pos = vim.api.nvim_buf_get_mark(0, "<")
+    local end_pos = vim.api.nvim_buf_get_mark(0, ">")
+    local lines = vim.api.nvim_buf_get_text(0, start_pos[1] - 1, start_pos[2], end_pos[1] - 1, end_pos[2] + 1, {})
+    local text = table.concat(lines, " ")
+    local query = text:gsub("^%s*(.-)%s*$", "%1"):gsub(" ", "+")
+    if query ~= "" then
+        os.execute("open 'https://google.com/search?q=" .. query .. "'")
+    end
+end
+
+vim.api.nvim_create_user_command("Google", googleSearch, { range = true });
+
 vim.api.nvim_create_user_command("Format", function(args)
     require("conform").format({
         async = true,
