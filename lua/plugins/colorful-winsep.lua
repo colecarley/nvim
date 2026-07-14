@@ -8,7 +8,7 @@ return {
     animate = { enabled = false },
     indicator_for_2wins = {
         -- only work when the total of windows is two
-        position = "both", -- false to disable or choose between "center", "start", "end" and "both"
+        position = "center", -- false to disable or choose between "center", "start", "end" and "both"
         symbols = {
             -- the meaning of left, down ,up, right is the position of separator
             start_left = "󱞬",
